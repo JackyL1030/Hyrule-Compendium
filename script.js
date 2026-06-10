@@ -5,9 +5,11 @@ let currentItems = [];
 
 async function loadData() {
   try {
+    showLoading();
     currentItems = await getCategory("monsters");
     //console.log(allMonsters[0]);
     renderCards(currentItems, openModal);
+    hideLoading();
 
     document
       .getElementById("close-modal")
@@ -30,7 +32,7 @@ function setupSearch() {
       item.name.toLowerCase().includes(searchTerm),
     );
 
-    renderCards(filteredMonsters, openModal);
+    renderCards(filteredItems, openModal);
   });
 }
 function setupCategories() {
@@ -39,13 +41,22 @@ function setupCategories() {
     button.addEventListener("click", async () => {
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active")
+      showLoading();
       const category = button.dataset.category;
 
       currentItems = await getCategory(category);
 
       renderCards(currentItems, openModal);
+      hideLoading();
     });
   });
+}
+function showLoading() {
+  document.getElementById("loading").classList.remove("hidden");
+}
+
+function hideLoading() {
+  document.getElementById("loading").classList.add("hidden");
 }
 
 loadData();
