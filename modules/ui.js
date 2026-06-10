@@ -5,6 +5,8 @@ export function renderCards(items) {
   items.forEach((item) => {
     const card = document.createElement("div");
 
+    card.classList.add("card")
+
     card.innerHTML = `
     <img src="${item.image}" alt="${item.name}">
     <h3>${item.name}</h3>
