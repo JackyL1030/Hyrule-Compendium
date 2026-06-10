@@ -1,19 +1,20 @@
 import { getCategory } from "./modules/api.js";
 import { renderCards, openModal, closeModal } from "./modules/ui.js";
 
-let allMonsters = [];
+let currentItems = [];
 
 async function loadData() {
   try {
-    allMonsters = await getCategory("monsters");
-    console.log(allMonsters[0]);
-    renderCards(allMonsters, openModal);
+    currentItems = await getCategory("monsters");
+    //console.log(allMonsters[0]);
+    renderCards(currentItems, openModal);
 
     document
       .getElementById("close-modal")
       .addEventListener("click", closeModal);
 
     setupSearch();
+    setupCategories();
   } catch (error) {
     console.error(error);
   }
@@ -22,14 +23,26 @@ async function loadData() {
 function setupSearch() {
   const searchInput = document.getElementById("search-input");
 
-  searchInput.addEventListener("input", event => {
+  searchInput.addEventListener("input", (event) => {
     const searchTerm = event.target.value.toLowerCase();
 
-    const filteredMonsters = allMonsters.filter(monster =>
-      monster.name.toLowerCase().includes(searchTerm)
+    const filteredItems = currentItems.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm),
     );
 
     renderCards(filteredMonsters, openModal);
+  });
+}
+function setupCategories() {
+  const buttons = document.querySelectorAll("[data-category]");
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const category = button.dataset.category;
+
+      currentItems = await getCategory(category);
+
+      renderCards(currentItems, openModal);
+    });
   });
 }
 
