@@ -37,6 +37,8 @@ function setupCategories() {
   const buttons = document.querySelectorAll("[data-category]");
   buttons.forEach((button) => {
     button.addEventListener("click", async () => {
+      buttons.forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active")
       const category = button.dataset.category;
 
       currentItems = await getCategory(category);
